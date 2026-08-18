@@ -1,0 +1,1383 @@
+{
+  "name": "My workflow 3 otro funciona bien",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 1,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "category:primary is:unread "
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -480,
+        448
+      ],
+      "id": "ad8b9d3e-77f5-49be-abd2-76701067cac6",
+      "name": "Gmail Trigger",
+      "executeOnce": true,
+      "alwaysOutputData": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "g8cFFHxmHcAhrSrC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cccab279-35f6-458d-8988-e5574af52c2c",
+              "name": "fecha",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "e52100e6-8b60-4d5a-bb1d-31ec2b1f99b5",
+              "name": "email",
+              "value": "={{ $node[\"Gmail Trigger\"].json[\"headers\"][\"from\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "c9edea23-8d10-4339-bc60-69463761c505",
+              "name": "asunto",
+              "value": "={{ $node[\"Gmail Trigger\"].json[\"subject\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        0
+      ],
+      "id": "5b3045e8-14dc-4630-9caf-b4a93688e7e0",
+      "name": "Edit Fields",
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2204ae4f-ab7e-499b-ae57-7a61e70e1a87",
+              "leftValue": "={{ Object.keys($binary).length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "5155e584-16fd-4b0e-bf7f-0d116953dfc5",
+              "leftValue": "={{ Object.keys($binary).length}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        448
+      ],
+      "id": "313dd9c9-662f-4945-9fda-181af5b7783f",
+      "name": "If",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "attachment_0",
+        "name": "=={{$binary.attachment_0.fileName}}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1XJv1cjeQdY7ZnqwFQE_Y_vdDXMs5QLXT",
+          "mode": "list",
+          "cachedResultName": "Descarga Archivo",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1XJv1cjeQdY7ZnqwFQE_Y_vdDXMs5QLXT"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "216ddd99-1173-4d80-a806-38d240873ead",
+      "name": "Upload file",
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HC6ugaAlB263GDpA",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "=Pedidos {{ $json.email }}",
+        "sheetsUi": {
+          "sheetValues": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        0
+      ],
+      "id": "effe9288-7c67-4e21-a7a8-6cc8d3e2797f",
+      "name": "Create spreadsheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "=attachment_0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        208
+      ],
+      "id": "4a467944-c2a3-4965-8e2c-76d9a0724b3e",
+      "name": "Extract from File",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extrae los datos del siguiente texto de pedido PDF:\n\n{{ $json.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Eres un experto en extraer pedidos de PDFs. Analiza el texto y devuelve **ÚNICAMENTE** el JSON válido según la estructura del Output Parser. No agregues explicaciones, no uses bloques de código (```json Responde solo con el objeto JSON puro."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        336,
+        192
+      ],
+      "id": "15c4717e-aba2-4e56-83e2-fb08a0e7b553",
+      "name": "Basic LLM Chain",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"pedido\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"numero_pedido\": { \"type\": \"string\" },\n        \"fecha\": { \"type\": \"string\" },\n        \"cliente\": { \"type\": \"string\" }\n      },\n      \"required\": [\"numero_pedido\", \"fecha\", \"cliente\"]\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"articulo\": { \"type\": \"string\" },\n          \"cantidad\": { \"type\": \"number\" },\n          \"unidad\": { \"type\": \"string\" }\n        },\n        \"required\": [\"articulo\", \"cantidad\"]\n      }\n    }\n  },\n  \"required\": [\"pedido\", \"items\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        352
+      ],
+      "id": "59cad6bb-0597-49e6-aac6-0dc257ea4cea",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": "mistral-medium",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        336,
+        352
+      ],
+      "id": "0457bed0-21cd-459e-b147-78e293c4eaa4",
+      "name": "Mistral Cloud Chat Model",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "yz1rrETfoteJKZvJ",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Intentamos obtener la raíz de los datos de todas las formas posibles\nconst input = $input.first().json;\nconst dataRoot = input.datos_recibidos?.output || input.output || input;\n\n// 2. Buscamos la lista de artículos\nconst items = dataRoot.pedido?.items || dataRoot.items;\n\n// 3. Si no es una lista válida, enviamos un error amigable en lugar de romperse\nif (!Array.isArray(items)) {\n  return [{ \n    json: { \n      error: \"No se encontró la lista\", \n      llaves_vistas: Object.keys(input) \n    } \n  }];\n}\n\n// 4. Si llegamos aquí, la lista existe. La enviamos a Sheets.\nreturn items.map(item => ({\n  json: {\n    articulo: item.articulo,\n    cantidad: item.cantidad,\n    unidad: item.unidad\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        192
+      ],
+      "id": "6ba29871-e07e-4e0f-abee-b2ae9e930dac",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "='1_wsAfRRi-81bAv4g1wF_wSG0Q5CTyqAE' in parents and mimeType = 'application/vnd.google-apps.spreadsheet'",
+        "limit": 1,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        992,
+        192
+      ],
+      "id": "882ffe26-d8a9-4961-a4b9-556c8fae44e1",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HC6ugaAlB263GDpA",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Articulo": "={{ $('Code in JavaScript').item.json.articulo }}",
+            "Cantidad": "={{ $('Code in JavaScript').item.json.cantidad }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Articulo",
+              "displayName": "Articulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cantidad",
+              "displayName": "Cantidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1248,
+        192
+      ],
+      "id": "08c8c3d3-08b0-42eb-acc1-3aba34094110",
+      "name": "Append row in sheet1",
+      "executeOnce": false,
+      "retryOnFail": false,
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Move file1').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Articulo",
+              "displayName": "Articulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cantidad",
+              "displayName": "Cantidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1264,
+        0
+      ],
+      "id": "c4abf308-b4cb-4d52-a26e-3b98a76d91bb",
+      "name": "Append row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1_wsAfRRi-81bAv4g1wF_wSG0Q5CTyqAE",
+          "mode": "list",
+          "cachedResultName": "pedidos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1_wsAfRRi-81bAv4g1wF_wSG0Q5CTyqAE"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        592,
+        0
+      ],
+      "id": "06cd52e1-f5f5-4721-8777-62ed18cd088f",
+      "name": "Move file1",
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HC6ugaAlB263GDpA",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d34c00e9-48e6-4135-bad0-a691f370abe2",
+              "name": "Articulo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "3fc0b169-9930-49aa-89fd-6ff7ea5e1697",
+              "name": "Cantidad",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "d070d14a-056d-44ec-b855-8e5e4669186a",
+      "name": "Edit Fields1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "06c4d5fa-007a-4b38-b1bd-71d7f8f2041f",
+      "name": "Wait",
+      "webhookId": "f9078ad3-a859-4e89-b044-44fa6acfde54"
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "UNREAD"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        192
+      ],
+      "id": "c0f4dc4a-5637-4320-8f26-610adddf86d8",
+      "name": "Remove label from message",
+      "webhookId": "ee9cee41-2da3-4082-88dc-f9e426a485c1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "g8cFFHxmHcAhrSrC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cccab279-35f6-458d-8988-e5574af52c2c",
+              "name": "fecha",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "e52100e6-8b60-4d5a-bb1d-31ec2b1f99b5",
+              "name": "email",
+              "value": "={{ $node[\"Gmail Trigger\"].json[\"headers\"][\"from\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "c9edea23-8d10-4339-bc60-69463761c505",
+              "name": "asunto",
+              "value": "={{ $node[\"Gmail Trigger\"].json[\"subject\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        560
+      ],
+      "id": "0c243f4b-3dee-4157-915a-67483d4bb5bf",
+      "name": "Edit Fields2",
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "=Pedidos {{ $json.email }}",
+        "sheetsUi": {
+          "sheetValues": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        560
+      ],
+      "id": "95e04a89-25a2-4fe9-bd12-2562bce36352",
+      "name": "Create spreadsheet1",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Move file').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Articulo",
+              "displayName": "Articulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cantidad",
+              "displayName": "Cantidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1296,
+        560
+      ],
+      "id": "b372de05-43d5-4732-8c67-f0a19adcb8e5",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1_wsAfRRi-81bAv4g1wF_wSG0Q5CTyqAE",
+          "mode": "list",
+          "cachedResultName": "pedidos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1_wsAfRRi-81bAv4g1wF_wSG0Q5CTyqAE"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        576,
+        560
+      ],
+      "id": "71c4644c-4150-468a-9382-92633ce37391",
+      "name": "Move file",
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HC6ugaAlB263GDpA",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d34c00e9-48e6-4135-bad0-a691f370abe2",
+              "name": "Articulo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "3fc0b169-9930-49aa-89fd-6ff7ea5e1697",
+              "name": "Cantidad",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        560
+      ],
+      "id": "62289e41-a06a-46ce-9d0a-f086d4b46f8b",
+      "name": "Edit Fields3",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        560
+      ],
+      "id": "6289982b-a1d0-44f9-a981-7b8a3ab4d01e",
+      "name": "Wait1",
+      "webhookId": "f9078ad3-a859-4e89-b044-44fa6acfde54"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').item.json.from.value[0].address }}",
+        "subject": "Distribuidora MOS s.a.",
+        "message": "Gracias por comunicarse con nosotros, hemos recibido su pedido, le notificaremos cuando sea despachado.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        800
+      ],
+      "id": "4ffbdb23-6df2-446d-9de1-29e4fbd3fd6d",
+      "name": "Send a message",
+      "webhookId": "f922253a-0b0b-451b-b63a-6b5968b65bdd",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "g8cFFHxmHcAhrSrC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analiza el siguiente correo y extrae todos los productos pedidos con sus cantidades.\n\nTexto del correo:\n {{ $json.html }} si usas ese campo)\n\nResponde solo con el JSON según el schema requerido.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúa como un extractor de datos especializado en logística. Tu objetivo es analizar el cuerpo de un correo electrónico y extraer información sobre pedidos de productos.  Instrucciones estrictas:  Identificación: Determina si el texto contiene una solicitud de compra, pedido de mercadería o lista de artículos con cantidades.  Normalización: >    - Convierte cualquier cantidad escrita en palabras (ej: \"cinco\", \"una docena\") a su valor numérico (5, 12).  Limpia los nombres de los artículos para que solo incluyan el producto (ej: \"bolsas de cemento\" en lugar de \"necesitaría que me mandes bolsas de cemento\").  Formato de Salida: Debes responder únicamente con el objeto JSON definido en el esquema, sin texto adicional, explicaciones ni saludos.  Casos negativos: Si el correo es una consulta general, un saludo o no contiene un pedido claro de artículos y cantidades, marca \"es_pedido\": false y deja la lista de \"pedido_detalles\" vacía."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        304,
+        800
+      ],
+      "id": "89438df7-38f5-4ac9-9f76-7714bb6829e6",
+      "name": "Basic LLM Chain1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        304,
+        960
+      ],
+      "id": "a7be4f79-63f8-4d0a-b6ba-f5baf55e0d08",
+      "name": "Mistral Cloud Chat Model1",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "yz1rrETfoteJKZvJ",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"pedidos\": [\n    {\n      \"producto\": \"Cuadernos A4 rayados\",\n      \"cantidad\": 20\n    },\n    {\n      \"producto\": \"Lápices negros HB\",\n      \"cantidad\": 50\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        960
+      ],
+      "id": "25417a6e-6de1-430d-b3e2-618121babaeb",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmOutput = $('Basic LLM Chain1').first().json.output;\nconst pedidos = llmOutput.pedidos;\n\nconst newItems = pedidos.map(p => ({\n  json: {\n    producto: String(p.producto || \"\"),\n    cantidad: Number(p.cantidad || 0)\n  }\n}));\n\nif (newItems.length === 0) {\n  newItems.push({ json: { producto: \"\", cantidad: 0 } });\n}\n\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        800
+      ],
+      "id": "4aeebfae-0e26-4ead-ad77-5ee337c7d097",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $input.item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Articulo": "={{ $('Code in JavaScript1').item.json.producto }}",
+            "Cantidad": "={{ $('Code in JavaScript1').item.json.cantidad }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Articulo",
+              "displayName": "Articulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cantidad",
+              "displayName": "Cantidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1280,
+        800
+      ],
+      "id": "b0226dc7-b216-4e9e-af77-744f7edbb098",
+      "name": "Append row in sheet3",
+      "executeOnce": false,
+      "retryOnFail": false,
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "='1_wsAfRRi-81bAv4g1wF_wSG0Q5CTyqAE' in parents and mimeType = 'application/vnd.google-apps.spreadsheet'",
+        "limit": 1,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        800
+      ],
+      "id": "c96ea0c7-b132-433e-9206-caa69e9df9e1",
+      "name": "Search files and folders1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "HC6ugaAlB263GDpA",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').item.json.from.value[0].address }}",
+        "subject": "=Distribuidora MOS s.a.",
+        "message": "Gracias por comunicarse con nosotros, hemos recibido su pedido, le notificaremos cuando sea despachado.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        192
+      ],
+      "id": "57210f37-69ea-43cd-8e35-5ad157d2816b",
+      "name": "Send a message1",
+      "webhookId": "f922253a-0b0b-451b-b63a-6b5968b65bdd",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "g8cFFHxmHcAhrSrC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "UNREAD"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1744,
+        800
+      ],
+      "id": "a0b917a2-369f-44c9-9d32-6662ff70bec8",
+      "name": "Remove label from message1",
+      "webhookId": "ee9cee41-2da3-4082-88dc-f9e426a485c1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "g8cFFHxmHcAhrSrC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{$node['Create spreadsheet1'].json['spreadsheetId']}}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"repeatCell\": {\n        \"range\": {\n          \"sheetId\": {{ $node['Create spreadsheet1'].json.sheets[0].properties.sheetId }},\n          \"startRowIndex\": 0,\n          \"endRowIndex\": 1\n        },\n        \"cell\": {\n          \"userEnteredFormat\": {\n            \"backgroundColor\": { \"red\": 0.1, \"green\": 0.4, \"blue\": 0.8 },\n            \"horizontalAlignment\": \"CENTER\",\n            \"textFormat\": {\n              \"foregroundColor\": { \"red\": 1, \"green\": 1, \"blue\": 1 },\n              \"fontSize\": 11,\n              \"bold\": true\n            }\n          }\n        },\n        \"fields\": \"userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)\"\n      }\n    },\n    {\n      \"updateDimensionProperties\": {\n        \"range\": {\n          \"sheetId\": {{ $node['Create spreadsheet1'].json.sheets[0].properties.sheetId }},\n          \"dimension\": \"COLUMNS\",\n          \"startIndex\": 0,\n          \"endIndex\": 1\n        },\n        \"properties\": { \"pixelSize\": 200 },\n        \"fields\": \"pixelSize\"\n      }\n    },\n    {\n      \"updateSheetProperties\": {\n        \"properties\": {\n          \"sheetId\": {{ $node['Create spreadsheet1'].json.sheets[0].properties.sheetId }},\n          \"gridProperties\": { \"frozenRowCount\": 1 }\n        },\n        \"fields\": \"gridProperties.frozenRowCount\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1504,
+        560
+      ],
+      "id": "f24824f9-5838-4d78-b656-b24974f5f607",
+      "name": "HTTP Request1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{$node['Create spreadsheet'].json['spreadsheetId']}}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"repeatCell\": {\n        \"range\": {\n          \"sheetId\": {{ $node['Create spreadsheet'].json.sheets[0].properties.sheetId }},\n          \"startRowIndex\": 0,\n          \"endRowIndex\": 1\n        },\n        \"cell\": {\n          \"userEnteredFormat\": {\n            \"backgroundColor\": { \"red\": 0.1, \"green\": 0.4, \"blue\": 0.8 },\n            \"horizontalAlignment\": \"CENTER\",\n            \"textFormat\": {\n              \"foregroundColor\": { \"red\": 1, \"green\": 1, \"blue\": 1 },\n              \"fontSize\": 11,\n              \"bold\": true\n            }\n          }\n        },\n        \"fields\": \"userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)\"\n      }\n    },\n    {\n      \"updateDimensionProperties\": {\n        \"range\": {\n          \"sheetId\": {{ $node['Create spreadsheet'].json.sheets[0].properties.sheetId }},\n          \"dimension\": \"COLUMNS\",\n          \"startIndex\": 0,\n          \"endIndex\": 1\n        },\n        \"properties\": { \"pixelSize\": 200 },\n        \"fields\": \"pixelSize\"\n      }\n    },\n    {\n      \"updateSheetProperties\": {\n        \"properties\": {\n          \"sheetId\": {{ $node['Create spreadsheet'].json.sheets[0].properties.sheetId }},\n          \"gridProperties\": { \"frozenRowCount\": 1 }\n        },\n        \"fields\": \"gridProperties.frozenRowCount\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1504,
+        0
+      ],
+      "id": "33fc78de-0530-4922-96fd-21d1ad2c45ff",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "S9wwShXcYIvzcVNR",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Move file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet1": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet3": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Remove label from message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Remove label from message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "264205d0-b8e7-4324-bddd-da7513902979",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "11ddca288af75f442dd8851d54fdb898067ca4030fce1778131d421ded79bcff"
+  },
+  "id": "eS03eyglqkhq1eBQ",
+  "tags": []
+}
