@@ -1,0 +1,86 @@
+SAPP — Sistema de Automatización de Procesamiento de Pedidos
+Trabajo final de carrera · Ingeniería en Informática
+Universidad Tecnológica Nacional — Facultad Regional Mendoza, 2026
+
+Autores: Juan Darío Sinatra, Matías Martínez y Emanuel Ortíz
+
+Este repositorio se distribuye bajo licencia dual, según el tipo de material.
+
+================================================================================
+CÓDIGO Y FLUJO DE AUTOMATIZACIÓN — Licencia MIT
+================================================================================
+
+Aplica a: Workflow/
+
+Copyright (c) 2026 Juan Darío Sinatra, Matías Martínez y Emanuel Ortíz
+
+Por la presente se concede permiso, libre de cargo, a cualquier persona que
+obtenga una copia de este software y de los archivos de documentación asociados
+(el "Software"), a utilizar el Software sin restricción, incluyendo sin
+limitación los derechos a usar, copiar, modificar, fusionar, publicar,
+distribuir, sublicenciar y/o vender copias del Software, y a permitir a las
+personas a las que se les proporcione el Software a hacer lo mismo, sujeto a las
+siguientes condiciones:
+
+El aviso de copyright anterior y este aviso de permiso se incluirán en todas las
+copias o partes sustanciales del Software.
+
+EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O
+IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A GARANTÍAS DE COMERCIALIZACIÓN,
+IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS
+AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN,
+DAÑOS U OTRAS RESPONSABILIDADES, YA SEA EN UNA ACCIÓN CONTRACTUAL, AGRAVIO O
+CUALQUIER OTRO MOTIVO, DERIVADAS DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O SU
+USO U OTRO TIPO DE ACCIONES EN EL SOFTWARE.
+
+Advertencia específica sobre este flujo: el archivo publicado se entrega en el
+estado sobre el cual se realizaron las mediciones reportadas en la tesis, sin
+incorporar las correcciones especificadas en su Capítulo 7. Contiene cuatro
+defectos documentados que afectan la integridad de los datos persistidos y la
+discriminación de correos que no constituyen pedidos. No se recomienda su uso en
+un entorno productivo sin aplicar previamente dichas correcciones.
+
+================================================================================
+CORPUS, DOCUMENTACIÓN Y EVIDENCIAS — Creative Commons Atribución 4.0 Internacional
+================================================================================
+
+Aplica a: Corpus/, Validacion/, Linea_de_base/, Evidencias/, Diagramas/, README.md
+
+Esta obra está bajo una Licencia Creative Commons Atribución 4.0 Internacional
+(CC BY 4.0).
+
+Usted es libre de:
+
+  COMPARTIR — copiar y redistribuir el material en cualquier medio o formato.
+  ADAPTAR — remezclar, transformar y construir a partir del material para
+  cualquier finalidad, incluso comercial.
+
+Bajo los siguientes términos:
+
+  ATRIBUCIÓN — Debe reconocer adecuadamente la autoría, proporcionar un enlace a
+  la licencia e indicar si se han realizado cambios. Puede hacerlo de cualquier
+  manera razonable, pero no de una manera que sugiera que tiene el apoyo del
+  licenciador o lo recibe por el uso que hace.
+
+Texto completo de la licencia:
+https://creativecommons.org/licenses/by/4.0/deed.es
+
+Cita sugerida:
+
+  Sinatra, J. D., Martínez, M. y Ortíz, E. (2026). SAPP — Sistema de
+  Automatización de Procesamiento de Pedidos [Trabajo final de carrera].
+  Universidad Tecnológica Nacional, Facultad Regional Mendoza.
+
+================================================================================
+NOTA SOBRE LOS DATOS DEL CORPUS
+================================================================================
+
+Los veinte documentos comerciales que integran el corpus fueron elaborados por
+el equipo de investigación con fines de evaluación. Los nombres de clientes,
+domicilios, números de pedido y datos comerciales son ficticios y no
+corresponden a personas humanas ni a organizaciones reales. No se procesaron
+datos personales de terceros en ninguna instancia del trabajo.
+
+Las capturas incluidas en Evidencias/ y Linea_de_base/ corresponden a cuentas de
+correo y de almacenamiento pertenecientes a los propios autores, utilizadas
+exclusivamente para la validación del sistema.
