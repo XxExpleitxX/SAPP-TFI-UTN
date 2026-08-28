@@ -34,10 +34,11 @@ CUALQUIER OTRO MOTIVO, DERIVADAS DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O S
 USO U OTRO TIPO DE ACCIONES EN EL SOFTWARE.
 
 Advertencia específica sobre este flujo: el archivo publicado se entrega en el
-estado sobre el cual se realizaron las mediciones reportadas en la tesis, sin
-incorporar las correcciones especificadas en su Capítulo 7. Contiene cuatro
-defectos documentados que afectan la integridad de los datos persistidos y la
-discriminación de correos que no constituyen pedidos. No se recomienda su uso en
+estado sobre el cual se realizaron las mediciones reportadas en el trabajo, sin
+incorporar las correcciones especificadas en su Capítulo 7. Contiene cinco
+defectos documentados que afectan la integridad de los datos persistidos, la
+discriminación de correos que no constituyen pedidos y la notificación de las
+condiciones que impiden completar el procesamiento. No se recomienda su uso en
 un entorno productivo sin aplicar previamente dichas correcciones.
 
 ================================================================================
@@ -70,6 +71,7 @@ Cita sugerida:
   Sinatra, J. D., Martínez, M. y Ortíz, E. (2026). SAPP — Sistema de
   Automatización de Procesamiento de Pedidos [Trabajo final de carrera].
   Universidad Tecnológica Nacional, Facultad Regional Mendoza.
+  https://doi.org/10.5281/zenodo.22117135
 
 ================================================================================
 NOTA SOBRE LOS DATOS DEL CORPUS
