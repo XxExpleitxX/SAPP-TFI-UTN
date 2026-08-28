@@ -7,7 +7,7 @@ Material de reproducibilidad del **trabajo final de carrera** «SAPP — Sistema
 **Institución:** Universidad Tecnológica Nacional — Facultad Regional Mendoza
 **Año:** 2026
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22117135.svg)](https://doi.org/10.5281/zenodo.22117135)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22148608.svg)](https://doi.org/10.5281/zenodo.22148608)
 
 ---
 
@@ -127,7 +127,7 @@ Los documentos del corpus fueron generados con fines de evaluación. Nombres de 
     Sinatra, J. D., Martínez, M. y Ortíz, E. (2026). SAPP — Sistema de
     Automatización de Procesamiento de Pedidos [Trabajo final de carrera].
     Universidad Tecnológica Nacional, Facultad Regional Mendoza.
-    https://doi.org/10.5281/zenodo.22117135
+    https://doi.org/10.5281/zenodo.22148608
 
 ## Licencia
 
